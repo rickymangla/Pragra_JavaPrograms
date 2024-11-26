@@ -3,11 +3,10 @@ import java.util.Scanner;
 public class Test {
 
     public static void main(String[] args) {
-        Book bookOld = new Book();
-//        Book book = new Book("five points someone", "Chetan Bhagat", 2003, 25.50, "fiction");
-        bookOld.bookDetails();
-//
-//        book.bookDetails();
+
+        Book book = new Book("five points someone", "chetan bhagat");
+
+        book.bookDetails();
 
 
 //        Addition addition = new Addition();
