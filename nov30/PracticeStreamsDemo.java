@@ -1,9 +1,7 @@
 package nov30;
 
 import java.awt.desktop.SystemSleepEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,7 +22,22 @@ public class PracticeStreamsDemo {
 
         //  practiceFlatMap();
         // practiceFlatMap2();
-        practiceFlatMap3();
+        // practiceFlatMap3();
+
+        //to practice distinct method in stream
+        // practiceDistinct();
+
+        // to practice min, max method of stream API
+        // practiceterminalMethods();
+
+        // to practice sorted method of stream API
+        //  sortedMethod();
+
+        // to practice anyMatch,allMatch,noneMatch method of stream API
+      //  matchMethod();
+
+        //to practice findAny, findFirst method of stream API
+        findMethod();
 
 
     }
@@ -182,6 +195,100 @@ public class PracticeStreamsDemo {
 //        stNames.forEach((s)-> System.out.println(s));
 
 
+    }
+
+    static void practiceDistinct() {
+        List<String> l = Arrays.asList("hello", "to", "java", "hello", "to");
+        List<String> distinctList = l.stream().distinct().collect(Collectors.toList());
+        distinctList.forEach((s) -> System.out.println(s));
+
+        // count method from stream
+        long countItems = l.stream().distinct().count();
+        System.out.println("total items are: " + countItems);
+
+        long countItemsNew = l.stream().count();
+        System.out.println("total items without distinct method: " + countItemsNew);
+
+        // limit method of stream
+        List<String> limitItems = l.stream().limit(3).collect(Collectors.toList());
+        limitItems.forEach((v) -> System.out.println(v));
+
+
+    }
+
+    static void practiceterminalMethods() {
+        List<Integer> l = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+        List<Integer> l1 = Arrays.asList(2, 5, 1, 3);
+        List<String> s1 = Arrays.asList("hello", "to", "java");
+
+        long evenNumberCount = l.stream().filter((i) -> (i % 2 == 0)).count();
+        System.out.println("even number count is: " + evenNumberCount);
+
+        // min method of stream API
+        Optional<Integer> minValue = l1.stream().min((i1, i2) -> {
+            return i1.compareTo(i2);
+        });
+        System.out.println("minimum value is: " + minValue.get());
+        Optional<String> minStirng = s1.stream().min((s3, s4) -> {
+            return s3.compareTo(s4);
+        });
+
+        System.out.println("minimum string is: " + minStirng.get());
+
+        //max method of stream API
+        Optional<Integer> maxValue = l1.stream().max((i1, i2) -> {
+            return i1.compareTo(i2);
+        });
+        System.out.println("maximum value is: " + maxValue.get());
+
+        //reduce method of stream API
+        List<String> s = Arrays.asList("A", "C", "E", "1", "2", "3");
+        Optional<String> reducedString = s.stream().reduce((value, combinedValue) -> {
+            return value + combinedValue;
+        });
+        System.out.println("combined string is:" + reducedString.get());
+
+        List<Integer> l3 = Arrays.asList(3, 5, 6, 7, 8);
+        Object[] integerArrays = l3.stream().toArray();
+        for (Object i : integerArrays) {
+            System.out.println(i);
+        }
+
+    }
+
+    static void sortedMethod() {
+        List<Integer> l = Arrays.asList(4, 6, 1, 2, 6, 7);
+        List<Integer> sortedList = l.stream().sorted().collect(Collectors.toList());
+        sortedList.forEach((i) -> System.out.println(i));
+
+        List<Integer> reverseList = l.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        reverseList.forEach((j) -> System.out.println(j));
+    }
+
+    static void matchMethod() {
+        Set<String> s = new HashSet<>();
+        s.add("hello");
+        s.add("to");
+        s.add("java");
+        boolean find = s.stream().anyMatch((d) -> d.startsWith("h"));  //true
+        System.out.println(find);
+
+        find = s.stream().allMatch((f) -> f.startsWith("h"));  //false
+        System.out.println(find);
+
+        find = s.stream().noneMatch((g) -> g.startsWith("h"));  //false
+        System.out.println(find);
+
+    }
+
+    static void findMethod() {
+        List<Integer>l=Arrays.asList(4,6,7,8,2);
+
+        Optional<Integer> value = l.stream().findAny();
+        System.out.println(value.get());
+
+        Optional<Integer> firstValue = l.stream().findFirst();
+        System.out.println(firstValue.get());
     }
 }
 
