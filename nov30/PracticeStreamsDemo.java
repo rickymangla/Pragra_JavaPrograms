@@ -1,7 +1,9 @@
 package nov30;
 
-import java.awt.desktop.SystemSleepEvent;
+//import java.awt.desktop.SystemSleepEvent;
+
 import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,7 +18,7 @@ public class PracticeStreamsDemo {
         //convertUpperCase();
         //printLength();
         //numberMultiplication();
-        // employeeSalary();
+         employeeSalary();
 
         //flatmap practice
 
@@ -34,10 +36,19 @@ public class PracticeStreamsDemo {
         //  sortedMethod();
 
         // to practice anyMatch,allMatch,noneMatch method of stream API
-      //  matchMethod();
+        //  matchMethod();
 
         //to practice findAny, findFirst method of stream API
-        findMethod();
+        // findMethod();
+
+        //to find sum of numbers in list using reduce method of stream API
+        // sumList();
+
+        //sortingMethod();
+
+       // noNeg();
+
+      //  practiceBinaryOperator();
 
 
     }
@@ -134,6 +145,12 @@ public class PracticeStreamsDemo {
         List<Double> listNew = l.stream().filter((e) -> (e.getSalary() > 4800)).map((e) -> e.getSalary()).collect(Collectors.toList());
         // List<Double> listNew = l.stream().filter((e) -> (e.getSalary() > 4800)).map(Employee::getSalary).collect(Collectors.toList());
         listNew.forEach((d) -> System.out.println(d));
+
+        Collections.sort(l,new SalaryComparator());
+
+        System.out.println("l = " + l);
+
+
     }
 
     static void practiceFlatMap() {
@@ -282,13 +299,47 @@ public class PracticeStreamsDemo {
     }
 
     static void findMethod() {
-        List<Integer>l=Arrays.asList(4,6,7,8,2);
+        List<Integer> l = Arrays.asList(4, 6, 7, 8, 2);
 
         Optional<Integer> value = l.stream().findAny();
         System.out.println(value.get());
 
         Optional<Integer> firstValue = l.stream().findFirst();
         System.out.println(firstValue.get());
+    }
+
+    static void sortingMethod() {
+        List<Integer> l = Arrays.asList(2, 4, 1, 9, 3);
+
+        l.stream().sorted((i1, i2) -> i1.compareTo(i2)).collect(Collectors.toList()).forEach((n) -> System.out.println(n));
+        System.out.println("minimum value is: " + l.stream().min((i1, i2) -> i1.compareTo(i2)).get());
+
+        List<String> l1 = Arrays.asList("hello", "to", "java");
+        l1.stream().sorted((s1, s2) -> s1.compareTo(s2)).forEach((s) -> System.out.println(s));
+
+        List<Double> l2 = Arrays.asList(2.4, 4.5, 6.7);
+        l2.stream().sorted((i1, i2) -> i1.compareTo(i2)).forEach((y) -> System.out.println(y));
+
+    }
+
+    static void sumList() {
+        List<Integer> l = Arrays.asList(3, 5, 6, 4, 6);
+        Optional<Integer> sumList = l.stream().reduce((val1, val2) -> val1 + val2);
+        System.out.println(sumList.get());
+    }
+
+    static void noNeg() {
+
+        List<Integer> l = Arrays.asList(1, 2, 19);
+
+        List<Integer> noNegNumbers = l.stream().filter((i) -> i % 10 != 9).collect(Collectors.toList());
+        System.out.println(noNegNumbers);
+
+    }
+
+    static void practiceBinaryOperator() {
+        BinaryOperator<Integer> b = (n1, n2) -> n1 > n2 ? n1 : n2;
+        System.out.println("b.apply(10,15) = " + b.apply(10, 15));
     }
 }
 
@@ -337,7 +388,7 @@ class Product {
     }
 }
 
-class Employee {
+class Employee implements Comparable<Employee> {
     private int id;
     private String name;
     private double salary;
@@ -379,6 +430,12 @@ class Employee {
                 ", name='" + name + '\'' +
                 ", salary=" + salary +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Employee e) {
+     //   return (int)(this.getSalary()-e.getSalary());
+        return this.getName().compareTo(e.getName());
     }
 }
 
@@ -424,5 +481,13 @@ class Student {
                 ", stName='" + stName + '\'' +
                 ", stGrade=" + stGrade +
                 '}';
+    }
+}
+
+class SalaryComparator implements Comparator<Employee> {
+
+    @Override
+    public int compare(Employee e1, Employee e2) {
+        return (int)(e1.getSalary()-e2.getSalary());
     }
 }
