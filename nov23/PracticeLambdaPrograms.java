@@ -9,10 +9,20 @@ public class PracticeLambdaPrograms {
 
     public static void main(String[] args) {
         //    Write a Java program to implement a lambda expression to find the average length of strings in a list.
-        //   averageLengthOfString((s) -> (s.length()));
+
+//        List<String> words=Arrays.asList("hello","to","java");
+      //  System.out.println(averageLengthOfString(words));
 
         //  Write a Java program to implement a lambda expression to check if a list of strings are all uppercase or all lowercase or mixedcase.
-        //  checkString();
+        List<String> words = Arrays.asList("HELLO", "TO", "java");
+        boolean isAllUpperCase = checkCase(words, (s) -> s.equals(s.toUpperCase()));
+        System.out.println("result of uppercase: " + isAllUpperCase);
+
+        boolean isAllLowerCase = checkCase(words, (s) -> s.equals(s.toLowerCase()));
+        System.out.println("result of lowercase: " + isAllLowerCase);
+
+        boolean isMixedCase = !isAllUpperCase && !isAllLowerCase;
+        System.out.println("result of mixedcase: " + isMixedCase);
 
         //  Write a Java program to implement a lambda expression to convert a list of strings to uppercase and lowercase.
         //  convertStringUpperCase((s)->(s.toUpperCase()));
@@ -25,63 +35,22 @@ public class PracticeLambdaPrograms {
         //  sortString();
 
         // Write a Java program to implement a lambda expression to concatenate two strings
-        System.out.println(concatenateStrings("hello","world"));
+        // System.out.println(concatenateStrings("hello", "world"));
+    }
 
+    static double averageLengthOfString(List<String> words) {
+
+        OptionalDouble average = words.stream().mapToInt(String::length).average();
+        return average.orElseThrow(() -> new RuntimeException("error in finding the average"));
 
     }
 
-    static void averageLengthOfString(Function<String, Integer> f) {
-        List<String> l = new ArrayList<>();
-        l.add("hello");
-        l.add("java");
-        l.add("python");
+    public static boolean checkCase(List<String> strings, Predicate<String> checkFunction) {
+//        String firstString = strings.get(0);
+//        String convertedString = convertFunction.apply(firstString);
 
-        int total_length = 0;
-
-        //  Function<String, Integer> f = (s) -> (s.length());
-
-
-        for (String s : l) {
-            int length = f.apply(s);
-            //   int length = s.length();
-            total_length = total_length + length;
-        }
-        //   Function<Integer,Double> f1=(i)->(total_length/l.size());
-        double average_length = total_length / l.size();
-
-        System.out.println("average length of string is: " + average_length);
-    }
-
-    static void checkString() {
-        List<String> l = new ArrayList<>();
-        l.add("hello");
-        l.add("java");
-        l.add("python");
-
-        boolean upperCase = false;
-        boolean lowerCase = false;
-        boolean mixedCase = false;
-
-        for (String s : l) {
-            char c[] = s.toCharArray();
-            for (int i = 0; i < c.length; i++) {
-                if (Character.isUpperCase(c[i])) {
-                    upperCase = true;
-                } else if (Character.isLowerCase(c[i])) {
-                    lowerCase = true;
-                } else {
-                    mixedCase = true;
-                }
-            }
-        }
-
-        if (upperCase) {
-            System.out.println("list contains all uppercase");
-        } else if (lowerCase) {
-            System.out.println("list contains all lowercase");
-        } else {
-            System.out.println("list contains mixedcase");
-        }
+        return strings.stream()
+                .allMatch(s -> checkFunction.test(s));
     }
 
     static void convertStringUpperCase(Function<String, String> f) {

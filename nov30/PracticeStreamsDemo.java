@@ -2,6 +2,8 @@ package nov30;
 
 //import java.awt.desktop.SystemSleepEvent;
 
+import com.sun.scenario.effect.impl.sw.java.JSWBlend_SRC_OUTPeer;
+
 import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
@@ -18,12 +20,12 @@ public class PracticeStreamsDemo {
         //convertUpperCase();
         //printLength();
         //numberMultiplication();
-         employeeSalary();
+        // employeeSalary();
 
         //flatmap practice
 
-        //  practiceFlatMap();
-        // practiceFlatMap2();
+        //   practiceFlatMap();
+        //  practiceFlatMap2();
         // practiceFlatMap3();
 
         //to practice distinct method in stream
@@ -46,9 +48,15 @@ public class PracticeStreamsDemo {
 
         //sortingMethod();
 
-       // noNeg();
+        noNeg();
 
-      //  practiceBinaryOperator();
+        //  practiceBinaryOperator();
+
+        //compareMethod();
+
+        // noNeg1();
+
+        practiceOptionalClass();
 
 
     }
@@ -146,7 +154,7 @@ public class PracticeStreamsDemo {
         // List<Double> listNew = l.stream().filter((e) -> (e.getSalary() > 4800)).map(Employee::getSalary).collect(Collectors.toList());
         listNew.forEach((d) -> System.out.println(d));
 
-        Collections.sort(l,new SalaryComparator());
+        Collections.sort(l, new SalaryComparator());
 
         System.out.println("l = " + l);
 
@@ -337,9 +345,98 @@ public class PracticeStreamsDemo {
 
     }
 
+    static void noNeg1() {
+        List<Integer> l = Arrays.asList(1, -2);
+        List<Integer> noNegNumbers = l.stream().filter((n) -> n > 0).collect(Collectors.toList());
+        System.out.println("noNegNumbers = " + noNegNumbers);
+    }
+
+    static void practiceOptionalClass() {
+//        String s1[] = new String[5];
+//        s1[0] = "hello";
+//        s1[1] = "to";
+//        s1[2] = "java";
+
+        // System.out.println(s1[3].toUpperCase());
+
+//        if(!s1[3].isEmpty()) {
+//            System.out.println("after converting: " + s1[3].toUpperCase());
+//        }
+//        else {
+//            System.out.println("value does not exist");
+//        }
+
+//        Optional<String> s=Optional.ofNullable(s1[3]);
+//        if(s.isPresent()) {
+//            System.out.println("after converting to uppercase: " + s.get().toUpperCase());
+//        }
+//        else {
+//            System.out.println("value does not exist");
+//        }
+
+//        Optional<String>o1=Optional.of(s1[3]);
+//
+//        if(o1.isPresent()) {
+//            System.out.println(s1[3]);
+//        }
+//        else {
+//            System.out.println("s1[3] is not present");
+//        }
+
+//        Optional<String> o2 = Optional.empty();
+//        if (o2.isPresent()) {
+//            System.out.println(s1[1]);
+//        } else {
+//            System.out.println("s1[3] is not present");
+//        }
+
+        Optional<Cat> optionalCat = findCatByName("Fred");
+//        if (optionalCat.isPresent()) {
+//            System.out.println(optionalCat.get().getAge());
+//        } else {
+//            System.out.println(0);
+//        }
+
+      //  Cat unknown = optionalCat.orElseGet(() -> new Cat("unknown", 0));
+
+     //   System.out.println(unknown);
+
+//        System.out.println(optionalCat.map(Cat::getName).orElse("cat does not exist"));
+//
+//        Cat cat = optionalCat.orElseThrow(() -> new RuntimeException("cat does not exist"));
+//        System.out.println("cat.getName() = " + cat.getName());
+
+        String catName = optionalCat.map((c) -> c.getName()).orElseThrow(() -> new RuntimeException("cat name does not exist"));
+        System.out.println("catName = " + catName);
+
+
+//        try {
+//            String s=null;
+//            String s1=s.toUpperCase();
+//        } catch (Exception e) {
+//            throw new RuntimeException("string cannot be converted to upperCase",e);
+//        }
+
+
+
+    }
+
+    private static Optional<Cat> findCatByName(String name) {
+        Cat cat = new Cat(name, 3);
+        return Optional.ofNullable(cat);
+    }
+
+
     static void practiceBinaryOperator() {
         BinaryOperator<Integer> b = (n1, n2) -> n1 > n2 ? n1 : n2;
         System.out.println("b.apply(10,15) = " + b.apply(10, 15));
+    }
+
+    static void compareMethod() {
+        String s = "Robin";
+        String s1 = "robin";
+
+        System.out.println("s.compareTo(s1) = " + s.compareTo(s1));
     }
 }
 
@@ -434,7 +531,7 @@ class Employee implements Comparable<Employee> {
 
     @Override
     public int compareTo(Employee e) {
-     //   return (int)(this.getSalary()-e.getSalary());
+        //   return (int)(this.getSalary()-e.getSalary());
         return this.getName().compareTo(e.getName());
     }
 }
@@ -488,6 +585,40 @@ class SalaryComparator implements Comparator<Employee> {
 
     @Override
     public int compare(Employee e1, Employee e2) {
-        return (int)(e1.getSalary()-e2.getSalary());
+        return (int) (e1.getSalary() - e2.getSalary());
+    }
+}
+
+class Cat {
+    private String name;
+    private int age;
+
+    public Cat(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Cat{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }
