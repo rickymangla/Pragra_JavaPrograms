@@ -1,6 +1,7 @@
 package nov23;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Test123 {
     public static void main(String[] args) {
@@ -9,22 +10,27 @@ public class Test123 {
 
 //        List<EmployeeNew> emp= Arrays.asList(new EmployeeNew("a",45.25,24),
 //                                             new EmployeeNew("b",55.25,25));
-       // System.out.println(emp);
+        // System.out.println(emp);
 
         //Set<EmployeeNew> empNew= new TreeSet<EmployeeNew>((e1,e2)->Double.compare(e1.getEmpSalary(),e2.getEmpSalary()));
-        Set<EmployeeNew> empNew= new TreeSet<EmployeeNew>();
-        empNew.add(new EmployeeNew("a",45.25,24));
-        empNew.add(new EmployeeNew("b",55.25,25));
+//        Set<EmployeeNew> empNew= new TreeSet<EmployeeNew>();
+//        empNew.add(new EmployeeNew("a",45.25,24));
+//        empNew.add(new EmployeeNew("b",55.25,25));
 
-        System.out.println(empNew);
+//        System.out.println(empNew);
 
-
-
-
+        System.out.println("mapPractice() = " + mapPractice());
 
 
     }
+
+    public static Map<Integer, String> mapPractice() {
+        List<String> l = Arrays.asList("one", "two", "three", "four", "five", "six");
+
+        return l.stream().collect(Collectors.toMap(String::length, (s) -> s, (oldValue, newValue) -> oldValue + " : " + newValue));
+    }
 }
+
 
 class EmployeeNew implements Comparable<EmployeeNew> {
     private String empName;
@@ -72,7 +78,7 @@ class EmployeeNew implements Comparable<EmployeeNew> {
 
     @Override
     public int compareTo(EmployeeNew o) {
-        return (int)(o.getEmpSalary()-this.getEmpSalary()) ;
+        return (int) (o.getEmpSalary() - this.getEmpSalary());
     }
 
 }
