@@ -12,6 +12,30 @@ public class Test123 {
 //                                             new EmployeeNew("b",55.25,25));
         // System.out.println(emp);
 
+        EmployeeNew emp1 = new EmployeeNew("a", 45.25, 24);
+        EmployeeNew emp2 = new EmployeeNew("b", 55.25, 25);
+        //  EmployeeNew emp3=emp2;
+
+
+//        Map<EmployeeNew, String> m = new HashMap<>();
+//        m.put(emp1,"A");
+//        m.put(emp2,"A");
+//        m.put(emp1,"A");
+//        m.put(emp1,"A");
+
+//        System.out.println("m.get(emp1) = " + m.get(emp1));
+
+        Set<EmployeeNew> empNew= new TreeSet<EmployeeNew>();
+
+
+//        System.out.println("emp1 details are: " + emp1);
+        System.out.println("emp1.equals(emp2) = " + emp1.equals(emp2));
+//
+//        System.out.println("emp1 hashcode is: " + emp1.hashCode());
+//        System.out.println("emp2 hashcode is: " + emp2.hashCode());
+        // System.out.println("emp1 salary hashcode is: " + emp1.getEmpSalary().has);
+
+
         //Set<EmployeeNew> empNew= new TreeSet<EmployeeNew>((e1,e2)->Double.compare(e1.getEmpSalary(),e2.getEmpSalary()));
 //        Set<EmployeeNew> empNew= new TreeSet<EmployeeNew>();
 //        empNew.add(new EmployeeNew("a",45.25,24));
@@ -19,7 +43,7 @@ public class Test123 {
 
 //        System.out.println(empNew);
 
-        System.out.println("mapPractice() = " + mapPractice());
+        // System.out.println("mapPractice() = " + mapPractice());
 
 
     }
@@ -76,9 +100,31 @@ class EmployeeNew implements Comparable<EmployeeNew> {
                 '}';
     }
 
+    //@Override
+//    public boolean equals(EmployeeNew o) {
+//        return o.getEmpSalary()==this.getEmpSalary();
+//    }
+
+    //@Override
+//    public int hashCode() {
+//        return 111;
+//    }
+
     @Override
     public int compareTo(EmployeeNew o) {
         return (int) (o.getEmpSalary() - this.getEmpSalary());
     }
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        EmployeeNew that = (EmployeeNew) o;
+//        return Double.compare(that.empSalary, empSalary) == 0 && empAge == that.empAge && Objects.equals(empName, that.empName);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(empName, empSalary, empAge);
+//    }
 }
