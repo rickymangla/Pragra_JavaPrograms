@@ -17,7 +17,8 @@ public class PracticeFunctionalInterface {
         //  print((name, age) -> System.out.println(name + "is" + " " + age + " years old"), "john ", 23);
 
         //BiFunction Interface example
-      //  sumNumbers((i1, i2) -> i1 + i2, 10, 15);
+       //
+        // sumNumbers((i1, i2) -> i1 + i2, 10, 15);
 
         multiplyNumber();
 
