@@ -1,5 +1,9 @@
 package nov30;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -117,6 +121,7 @@ public class PracticeStreamAssignment {
         Map<String, Optional<EmployeeNew>> collect7 = empList.stream()
                 .collect(Collectors.groupingBy(EmployeeNew::getDepartment, Collectors.maxBy((a, b) -> Double.compare(a.getSalary(), b.getSalary()))));
         System.out.println("collect7 = " + collect7);
+
         Set<Map.Entry<String, Optional<EmployeeNew>>> entries = collect7.entrySet();
         for (Map.Entry<String, Optional<EmployeeNew>> entry : entries) {
             System.out.println(entry.getKey() + entry.getValue().orElseThrow(() -> new RuntimeException("error in fetching value")));
@@ -134,7 +139,97 @@ public class PracticeStreamAssignment {
                 .collect(Collectors.groupingBy(EmployeeNew::getDepartment, Collectors.summingDouble(EmployeeNew::getSalary)));
         System.out.println("collect10 = " + collect10);
 
+        //Return a report with departments sorted by average salary, and for each department,
+        // a list of employees who earn more than the department’s average salary
+        Map<String, Double> collect11 = empList.stream()
+                .collect(Collectors.groupingBy(EmployeeNew::getDepartment, Collectors.averagingDouble(EmployeeNew::getSalary)));
+        System.out.println("collect11 = " + collect11);
 
+
+        //problem 5
+        List<StockPrice> stockData = Arrays.asList(
+                new StockPrice("Company A", "2024-01-02", 120),
+                new StockPrice("Company A", "2024-01-03", 130),
+                new StockPrice("Company B", "2024-01-02", 200),
+                new StockPrice("Company B", "2024-01-03", 210),
+                new StockPrice("Company A", "2024-02-01", 125),
+                new StockPrice("Company B", "2022-02-01", 220)
+        );
+        //Find the company with the highest average stock price over the last year
+
+        // find stockprice data from previous year
+        LocalDate oneYearAgo = LocalDate.now().minusDays(365);
+        List<StockPrice> collect12 = stockData.stream().filter((a) -> !a.getDate().isBefore(oneYearAgo)).collect(Collectors.toList());
+        System.out.println("collect12 = " + collect12);
+
+        // calculate average stock price for each company
+        Map<String, Double> collect13 = collect12.stream()
+                .collect(Collectors.groupingBy(StockPrice::getCompanyName, Collectors.averagingDouble(StockPrice::getPrice)));
+        System.out.println("collect13 = " + collect13);
+
+        //find the highest average stock price and name of company
+        String companyHighestAverageStockPrice = null;
+        double highestAverageStockPrice = 0;
+
+        Set<Map.Entry<String, Double>> entries1 = collect13.entrySet();
+
+        for (Map.Entry<String, Double> entry : entries1) {
+            if (entry.getValue() > highestAverageStockPrice) {
+                highestAverageStockPrice = entry.getValue();
+                companyHighestAverageStockPrice = entry.getKey();
+            }
+        }
+        System.out.println("companyHighestAverageStockPrice = " + companyHighestAverageStockPrice);
+        System.out.println("highestAverageStockPrice = " + highestAverageStockPrice);
+
+        // Identify the date when each company's stock price was highest
+        Map<String, Optional<StockPrice>> collect14 = stockData.stream()
+                .collect(Collectors.groupingBy(StockPrice::getCompanyName, Collectors.maxBy(Comparator.comparingDouble(StockPrice::getPrice))));
+        System.out.println("collect14 = " + collect14);
+
+        Set<Map.Entry<String, Optional<StockPrice>>> entries2 = collect14.entrySet();
+        for (Map.Entry<String, Optional<StockPrice>> entry : entries2) {
+            System.out.println(entry.getKey());
+            System.out.println(entry.getValue().orElseThrow(() -> new RuntimeException("error in obtaining data")).getDate());
+        }
+
+        // Calculate the percentage change in stock price for each company from the first recorded date to the last
+        Map<String, List<StockPrice>> collect17 = stockData.stream().collect(Collectors.groupingBy(StockPrice::getCompanyName));
+        System.out.println("collect17 = " + collect17);
+
+        Set<Map.Entry<String, List<StockPrice>>> entries3 = collect17.entrySet();
+        for (Map.Entry<String, List<StockPrice>> entry : entries3) {
+            List<StockPrice> value = entry.getValue();
+            System.out.println("value = " + value);
+            StockPrice minStockPrice = value.stream().min(Comparator.comparing(StockPrice::getDate)).orElseThrow(() -> new RuntimeException());
+
+/***********   method 2 to compare date
+
+            StockPrice stockPrice = value.stream()
+                    .min((a, b) -> a.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                            .compareTo(b.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
+                    .orElseThrow(() -> new RuntimeException());
+            System.out.println("minimum price is: " + stockPrice.getPrice());
+
+            StockPrice stockPriceNew = value.stream()
+                    .max((a, b) -> a.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                            .compareTo(b.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
+                    .orElseThrow(() -> new RuntimeException());
+            System.out.println("maximum price is: " + stockPriceNew.getPrice());
+
+*********************/
+
+            StockPrice maxStockPrice = value.stream().max(Comparator.comparing(StockPrice::getDate)).orElseThrow(() -> new RuntimeException());
+            double minPrice = minStockPrice.getPrice();
+            double maxPrice = maxStockPrice.getPrice();
+            System.out.println("minPrice = " + minPrice);
+            System.out.println("maxPrice = " + maxPrice);
+            System.out.println(((maxStockPrice.getPrice() - minStockPrice.getPrice()) / minStockPrice.getPrice()) * 100);
+        }
+
+        //List all companies with an average stock price above a certain threshold
+        Set<String> collect15 = stockData.stream().filter((a) -> a.getPrice() > 150).map((a) -> a.getCompanyName()).collect(Collectors.toSet());
+        System.out.println("collect15 = " + collect15);
     }
 
 
@@ -358,5 +453,38 @@ class EmployeeNew {
 
     public int getYearsExperience() {
         return yearsExperience;
+    }
+}
+
+class StockPrice {
+    private String companyName;
+    private LocalDate date;
+    private double price;
+
+    public StockPrice(String companyName, String date, double price) {
+        this.companyName = companyName;
+        this.date = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+        this.price = price;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    @Override
+    public String toString() {
+        return "StockPrice{" +
+                "companyName='" + companyName + '\'' +
+                ", date='" + date + '\'' +
+                ", price=" + price +
+                '}';
     }
 }
